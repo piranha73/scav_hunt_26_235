@@ -28,7 +28,11 @@ body {
 body {
   min-height: 100vh;
   min-height: 100dvh;
-  padding: 12px;
+  padding:
+    max(12px, env(safe-area-inset-top))
+    max(12px, env(safe-area-inset-right))
+    max(12px, env(safe-area-inset-bottom))
+    max(12px, env(safe-area-inset-left));
   overflow: hidden;
 }
 
@@ -45,7 +49,7 @@ body {
   background: var(--card);
   border: 1px solid rgba(255, 255, 255, 0.7);
   border-radius: 28px;
-  padding: 14px;
+  padding: 16px;
   box-shadow: var(--shadow);
   backdrop-filter: blur(10px);
 }
@@ -58,6 +62,7 @@ body {
     linear-gradient(180deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.1)),
     linear-gradient(135deg, rgba(243, 111, 56, 0.16), rgba(30, 140, 133, 0.16));
   border: 1px solid var(--line);
+  margin-top: 8px;
 }
 
 .arena {
@@ -66,6 +71,7 @@ body {
   min-height: 0;
   overflow: hidden;
   touch-action: none;
+  isolation: isolate;
 }
 
 .capture-prompt {
@@ -117,9 +123,17 @@ body {
   position: absolute;
   inset: auto 0 0;
   height: 92px;
+  z-index: 0;
+  pointer-events: none;
   background:
     radial-gradient(circle at 15% 20%, rgba(255, 255, 255, 0.35), transparent 20%),
-    linear-gradient(180deg, rgba(247, 183, 51, 0.08), rgba(243, 111, 56, 0.22));
+    linear-gradient(180deg, rgba(247, 183, 51, 0.04), rgba(243, 111, 56, 0.14));
+}
+
+.pal,
+.snack,
+.burst {
+  z-index: 1;
 }
 
 .pal {
@@ -245,7 +259,7 @@ body {
 }
 
 .dashboard {
-  padding-top: 12px;
+  padding-top: 10px;
 }
 
 .stat + .stat {
@@ -279,25 +293,31 @@ body {
 }
 
 .status-line {
-  margin-top: 14px;
-  min-height: 24px;
+  margin-top: 10px;
+  min-height: 20px;
+  font-size: 0.92rem;
   font-weight: 700;
 }
 
 .controls {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
-  padding-top: 12px;
-  flex-wrap: wrap;
+  padding-top: 10px;
+  align-items: center;
 }
 
 .action {
   appearance: none;
   border: 0;
   border-radius: 999px;
-  padding: 14px 18px;
+  min-width: 0;
+  padding: 10px 12px;
   font: inherit;
+  font-size: 0.84rem;
   font-weight: 800;
+  line-height: 1.1;
+  white-space: nowrap;
   color: white;
   background: var(--orange);
   box-shadow: 0 10px 20px rgba(243, 111, 56, 0.25);
@@ -328,8 +348,8 @@ body {
 }
 
 .hint {
-  margin: 12px 0 0;
-  font-size: 0.94rem;
+  margin: 10px 0 0;
+  font-size: 0.86rem;
   line-height: 1.35;
   color: rgba(31, 27, 24, 0.82);
 }
@@ -363,15 +383,20 @@ body {
 }
 
 @media (max-width: 420px) {
+  .pet-card {
+    padding: 14px;
+  }
+
   .controls {
-    flex-direction: column;
+    gap: 8px;
   }
 
   .action {
-    width: 100%;
+    padding: 10px 8px;
+    font-size: 0.75rem;
   }
 
   .hint {
-    font-size: 0.88rem;
+    font-size: 0.8rem;
   }
 }
