@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Pocket Pal Panic</title>
+    <meta
+      name="description"
+      content="A tiny installable scavenger hunt PWA where your teammate can be fed and tossed around."
+    />
+    <meta name="theme-color" content="#f36f38" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Pocket Pal" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="icons/icon-192.png" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="hero">
+        <p class="eyebrow">Scavenger Hunt PWA</p>
+        <h1>Pocket Pal Panic</h1>
+        <p class="lede">
+          Keep your captured teammate happy. Feed them snacks, flick them across the room, and keep
+          their mood from collapsing.
+        </p>
+      </section>
+
+      <section class="pet-card">
+        <div class="arena-wrap">
+          <div class="arena" id="arena" aria-label="Play area for your teammate">
+            <div class="pal" id="pal" aria-live="polite">
+              <div class="pal-face">
+                <span class="eye"></span>
+                <span class="eye"></span>
+                <span class="mouth" id="mouth"></span>
+              </div>
+              <div class="pal-body"></div>
+            </div>
+            <div class="snack" id="snack" hidden>🍕</div>
+            <div class="burst" id="burst" hidden>+1 snack</div>
+          </div>
+        </div>
+
+        <div class="dashboard">
+          <div class="stat">
+            <span class="stat-label">Mood</span>
+            <div class="meter"><div class="meter-fill" id="moodFill"></div></div>
+          </div>
+          <div class="stat">
+            <span class="stat-label">Fullness</span>
+            <div class="meter"><div class="meter-fill alt" id="fullnessFill"></div></div>
+          </div>
+          <div class="status-line" id="statusLine">Your pal is suspicious but cooperative.</div>
+        </div>
+
+        <div class="controls">
+          <button type="button" class="action" id="feedButton">Feed Snack</button>
+          <button type="button" class="action alt" id="calmButton">Pat Head</button>
+          <button type="button" class="action ghost" id="installButton" hidden>Install App</button>
+        </div>
+
+        <p class="hint">
+          Flick or drag your teammate to toss them. Feed carefully: too many snacks makes them grumpy.
+        </p>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
