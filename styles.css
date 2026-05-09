@@ -68,6 +68,50 @@ body {
   touch-action: none;
 }
 
+.capture-prompt {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  right: 18px;
+  z-index: 3;
+  padding: 16px 18px;
+  border-radius: 20px;
+  background: rgba(255, 251, 244, 0.9);
+  border: 1px solid rgba(31, 27, 24, 0.1);
+  box-shadow: 0 12px 32px rgba(87, 44, 16, 0.12);
+}
+
+.capture-prompt[hidden] {
+  display: none;
+}
+
+.capture-title,
+.capture-copy {
+  margin: 0;
+}
+
+.capture-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+.capture-copy {
+  margin-top: 6px;
+  color: rgba(31, 27, 24, 0.72);
+}
+
+.capture-cta {
+  margin-top: 12px;
+  appearance: none;
+  border: 0;
+  border-radius: 999px;
+  padding: 12px 16px;
+  font: inherit;
+  font-weight: 800;
+  color: white;
+  background: var(--teal);
+}
+
 .arena::after {
   content: "";
   position: absolute;
@@ -94,6 +138,35 @@ body {
 
 .pal.dragging {
   cursor: grabbing;
+}
+
+.pal.has-photo {
+  width: 132px;
+  height: 160px;
+  margin-left: -66px;
+  margin-top: -80px;
+}
+
+.pal-avatar {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.pal.has-photo .pal-avatar {
+  display: none;
+}
+
+.pal-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 26px;
+  object-fit: cover;
+  border: 4px solid rgba(255, 255, 255, 0.82);
+  box-shadow: 0 16px 28px rgba(31, 27, 24, 0.18);
+  background: rgba(255, 255, 255, 0.55);
 }
 
 .pal-face,
@@ -240,6 +313,18 @@ body {
   background: rgba(255, 255, 255, 0.84);
   box-shadow: none;
   border: 1px solid var(--line);
+}
+
+.action.ghost-teal {
+  color: var(--teal);
+  background: rgba(255, 255, 255, 0.84);
+  box-shadow: none;
+  border: 1px solid rgba(30, 140, 133, 0.16);
+}
+
+.action:disabled {
+  opacity: 0.48;
+  box-shadow: none;
 }
 
 .hint {

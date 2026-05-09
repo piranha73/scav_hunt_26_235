@@ -19,12 +19,19 @@ const state = {
 
 const arena = document.getElementById("arena");
 const pal = document.getElementById("pal");
+const palPhoto = document.getElementById("palPhoto");
+const palAvatar = document.getElementById("palAvatar");
 const mouth = document.getElementById("mouth");
 const snack = document.getElementById("snack");
 const burst = document.getElementById("burst");
 const moodFill = document.getElementById("moodFill");
 const fullnessFill = document.getElementById("fullnessFill");
 const statusLine = document.getElementById("statusLine");
+const hint = document.getElementById("hint");
+const photoInput = document.getElementById("photoInput");
+const captureButton = document.getElementById("captureButton");
+const captureHeroButton = document.getElementById("captureHeroButton");
+const capturePrompt = document.getElementById("capturePrompt");
 const feedButton = document.getElementById("feedButton");
 const calmButton = document.getElementById("calmButton");
 const installButton = document.getElementById("installButton");
@@ -33,6 +40,8 @@ let deferredPrompt = null;
 let lastFrame = performance.now();
 
 const statusMessages = {
+  uncaptured: "Pick a target. Capture a teammate to begin.",
+  captured: "Captured. Keep your teammate fed and under control.",
   ecstatic: "Your pal is thriving in captivity.",
   happy: "Your pal is playful and dangerously tossable.",
   okay: "Your pal is suspicious but cooperative.",
@@ -49,9 +58,23 @@ function setStatus(message) {
   statusLine.textContent = message;
 }
 
+function setInteractionEnabled(enabled) {
+  feedButton.disabled = !enabled;
+  calmButton.disabled = !enabled;
+}
+
+function hasPhoto() {
+  return pal.classList.contains("has-photo");
+}
+
 function updateMeters() {
   moodFill.style.width = `${state.mood}%`;
   fullnessFill.style.width = `${state.fullness}%`;
+
+  if (!hasPhoto()) {
+    setStatus(statusMessages.uncaptured);
+    return;
+  }
 
   if (state.mood > 82) {
     mouth.style.borderRadius = "0 0 18px 18px";
@@ -104,6 +127,11 @@ function showSnack() {
 }
 
 function feedPal() {
+  if (!hasPhoto()) {
+    setStatus(statusMessages.uncaptured);
+    return;
+  }
+
   showSnack();
   state.fullness = clamp(state.fullness + 14, 0, 100);
   state.mood = clamp(state.mood + (state.fullness > 78 ? -6 : 9), 0, 100);
@@ -113,13 +141,23 @@ function feedPal() {
 }
 
 function calmPal() {
+  if (!hasPhoto()) {
+    setStatus(statusMessages.uncaptured);
+    return;
+  }
+
   state.mood = clamp(state.mood + 8, 0, 100);
   state.fullness = clamp(state.fullness - 4, 0, 100);
+  state.rotation = clamp(state.rotation - 6, -24, 24);
   animateBurst("pat pat");
   updateMeters();
 }
 
 function degradeNeeds() {
+  if (!hasPhoto()) {
+    return;
+  }
+
   state.fullness = clamp(state.fullness - 0.018, 0, 100);
   state.mood = clamp(state.mood - (state.fullness < 22 ? 0.024 : 0.008), 0, 100);
 }
@@ -181,6 +219,11 @@ function pointerPosition(event) {
 }
 
 function startDrag(event) {
+  if (!hasPhoto()) {
+    photoInput.click();
+    return;
+  }
+
   event.preventDefault();
   state.dragging = true;
   state.pointerId = event.pointerId;
@@ -236,6 +279,32 @@ function releasePal(event) {
   pal.classList.remove("dragging");
 }
 
+function applyPhoto(file) {
+  if (!file || !file.type.startsWith("image/")) {
+    setStatus("That file is not an image.");
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.addEventListener("load", () => {
+    palPhoto.src = reader.result;
+    palPhoto.hidden = false;
+    pal.classList.add("has-photo");
+    capturePrompt.hidden = true;
+    captureButton.textContent = "Retake Photo";
+    hint.textContent = "Drag or flick your teammate to toss them. Feed carefully: too many snacks makes them grumpy.";
+    setInteractionEnabled(true);
+    state.mood = 72;
+    state.fullness = 36;
+    state.vx = 0;
+    state.vy = 0;
+    setStatus(statusMessages.captured);
+    updateMeters();
+    renderPal();
+  });
+  reader.readAsDataURL(file);
+}
+
 pal.addEventListener("pointerdown", startDrag);
 pal.addEventListener("pointermove", moveDrag);
 pal.addEventListener("pointerup", releasePal);
@@ -243,6 +312,20 @@ pal.addEventListener("pointercancel", releasePal);
 window.addEventListener("pointermove", moveDrag, { passive: false });
 window.addEventListener("pointerup", releasePal, { passive: false });
 window.addEventListener("pointercancel", releasePal, { passive: false });
+
+captureButton.addEventListener("click", () => {
+  photoInput.click();
+});
+
+captureHeroButton.addEventListener("click", () => {
+  photoInput.click();
+});
+
+photoInput.addEventListener("change", (event) => {
+  const [file] = event.target.files || [];
+  applyPhoto(file);
+  photoInput.value = "";
+});
 
 feedButton.addEventListener("click", feedPal);
 calmButton.addEventListener("click", calmPal);
@@ -279,4 +362,5 @@ if ("serviceWorker" in navigator) {
 
 updateMeters();
 renderPal();
+setInteractionEnabled(false);
 window.requestAnimationFrame(tick);

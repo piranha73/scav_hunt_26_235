@@ -22,13 +22,21 @@
       <section class="pet-card">
         <div class="arena-wrap">
           <div class="arena" id="arena" aria-label="Play area for your teammate">
+            <div class="capture-prompt" id="capturePrompt">
+              <p class="capture-title">Capture your teammate</p>
+              <p class="capture-copy">Take a quick photo, then trap them in the arena.</p>
+              <button type="button" class="capture-cta" id="captureHeroButton">Take Photo</button>
+            </div>
             <div class="pal" id="pal" aria-live="polite">
-              <div class="pal-face">
-                <span class="eye"></span>
-                <span class="eye"></span>
-                <span class="mouth" id="mouth"></span>
+              <img class="pal-photo" id="palPhoto" alt="Captured teammate" hidden />
+              <div class="pal-avatar" id="palAvatar">
+                <div class="pal-face">
+                  <span class="eye"></span>
+                  <span class="eye"></span>
+                  <span class="mouth" id="mouth"></span>
+                </div>
+                <div class="pal-body"></div>
               </div>
-              <div class="pal-body"></div>
             </div>
             <div class="snack" id="snack" hidden>🍕</div>
             <div class="burst" id="burst" hidden>+1 snack</div>
@@ -48,13 +56,15 @@
         </div>
 
         <div class="controls">
-          <button type="button" class="action" id="feedButton">Feed Snack</button>
-          <button type="button" class="action alt" id="calmButton">Pat Head</button>
+          <input type="file" id="photoInput" accept="image/*" capture="environment" hidden />
+          <button type="button" class="action" id="captureButton">Capture Friend</button>
+          <button type="button" class="action alt" id="feedButton" disabled>Feed Snack</button>
+          <button type="button" class="action alt ghost-teal" id="calmButton" disabled>Pat Head</button>
           <button type="button" class="action ghost" id="installButton" hidden>Install App</button>
         </div>
 
-        <p class="hint">
-          Flick or drag your teammate to toss them. Feed carefully: too many snacks makes them grumpy.
+        <p class="hint" id="hint">
+          Start by taking a photo. After that, drag or flick your teammate to toss them around.
         </p>
       </section>
     </main>
